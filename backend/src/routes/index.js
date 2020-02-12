@@ -1,7 +1,9 @@
 const express = require('express');
 
+const hostel = require('./hostel');
+
 const router = express.Router();
 
-router.get('/', (req, res) => { res.send({ message: 'Hello World' }); });
+router.use('/hostels', hostel);
 
 module.exports = router;
