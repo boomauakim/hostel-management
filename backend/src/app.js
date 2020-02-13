@@ -1,4 +1,8 @@
 /* eslint-disable global-require */
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').config();
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -8,10 +12,6 @@ const logger = require('./utils/logger');
 
 const app = express();
 
-if (process.env.NODE_ENV === 'development') {
-  require('dotenv').config();
-}
-
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use('/api', routes);
@@ -19,8 +19,12 @@ app.use((req, res) => {
   res.status(404).send(body.error('ENDPOINT_NOT_FOUND', 'Enpoint not found.'));
 });
 app.use((err, req, res, next) => {
-  logger.error(err.stack);
-  res.status(500).send(body.error());
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send(body.error(body.errorMsg.UNAUTHORIZED, 'Unauthorized.'));
+  } else {
+    logger.error(err.stack);
+    res.status(500).send(body.error());
+  }
   next();
 });
 

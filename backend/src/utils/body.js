@@ -1,6 +1,7 @@
-const code = {
+const errorMsg = {
   INVALID_PARAMETER: 'INVALID_PARAMETER',
   METHOD_NOT_ALLOWED: 'METHOD_NOT_ALLOWED',
+  UNAUTHORIZED: 'UNAUTHORIZED',
 };
 
 const success = (topic = '', details = {}) => {
@@ -10,20 +11,20 @@ const success = (topic = '', details = {}) => {
   return { [topic]: details };
 };
 
-const error = (errorCode = '', message = {}) => {
-  if (errorCode && message) {
+const error = (errorMessage = '', message = {}) => {
+  if (errorMessage && message) {
     return {
       errors: {
-        code: errorCode, message,
+        error: errorMessage, message,
       },
     };
   }
   return {
     errors: {
-      code: 'INTERNAL_SERVER_ERROR',
+      error: 'INTERNAL_SERVER_ERROR',
       message: 'Sorry, Something went wrong.',
     },
   };
 };
 
-module.exports = { code, success, error };
+module.exports = { errorMsg, success, error };
