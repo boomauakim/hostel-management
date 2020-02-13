@@ -32,7 +32,7 @@ const getAllHostel = async (req, res) => {
               $lt: new mongoose.Types.ObjectId(query.before),
             },
           })
-          .sort({ roomId: 1 })
+          .sort({ id: -1 })
           .limit(parseInt(query.limit, 10));
       } else if (query.after) {
         data = await HostelModel
@@ -41,17 +41,17 @@ const getAllHostel = async (req, res) => {
               $gt: new mongoose.Types.ObjectId(query.after),
             },
           })
-          .sort({ roomId: 1 })
+          .sort({ id: 1 })
           .limit(parseInt(query.limit, 10));
       } else {
         data = await HostelModel
           .find()
-          .sort({ roomId: 1 })
+          .sort({ id: 1 })
           .limit(parseInt(query.limit, 10));
       }
 
-      const first = await HostelModel.findOne().sort({ roomId: 1 }).limit(1);
-      const last = await HostelModel.findOne().sort({ roomId: -1 }).limit(1);
+      const first = await HostelModel.findOne().sort({ id: 1 }).limit(1);
+      const last = await HostelModel.findOne().sort({ id: -1 }).limit(1);
       let next = '';
       let previous = '';
 
@@ -86,10 +86,10 @@ const getAllHostel = async (req, res) => {
 };
 
 const getHostel = async (req, res) => {
-  const { roomId } = req.params;
+  const { id } = req.params;
 
   try {
-    const data = await HostelModel.findOne({ roomId });
+    const data = await HostelModel.findOne({ id });
 
     if (data) {
       return res.status(200).send(body.success(TOPIC, data));
@@ -160,7 +160,7 @@ const searchHotel = async (req, res) => {
   const { query } = req.query;
 
   try {
-    const data = await HostelModel.find({ $text: { $search: query } }, 'roomId name location.country location.city');
+    const data = await HostelModel.find({ $text: { $search: query } }, 'id name location.country location.city');
 
     if (Object.entries(data).length !== 0) {
       return res.status(200).send(body.success(TOPIC, data));

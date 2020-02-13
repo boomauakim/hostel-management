@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const Joi = require('@hapi/joi');
 const jwt = require('jsonwebtoken');
 
@@ -24,7 +25,7 @@ const login = async (req, res) => {
         return res.status(401).send(body.error('UNAUTHORIZED', 'Email or Password is incorrect.'));
       }
 
-      const token = jwt.sign({ uid: user.id }, process.env.SECRET_KEY);
+      const token = jwt.sign({ uid: user.toObject()._id }, process.env.SECRET_KEY);
 
       return res.status(200).send({ access_token: token });
     } catch (err) {

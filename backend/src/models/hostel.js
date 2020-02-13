@@ -1,10 +1,13 @@
-/* eslint-disable no-underscore-dangle, no-use-before-define, func-names */
+/* eslint-disable func-names, no-underscore-dangle, no-use-before-define */
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
 const HostelSchema = new Schema({
-  roomId: Number,
+  id: {
+    type: Number,
+    unique: true,
+  },
   name: String,
   price: Number,
   images: Array,
@@ -28,7 +31,10 @@ HostelSchema.set('timestamps', true);
 HostelSchema.set('toJSON', {
   transform: (doc, ret) => {
     const data = ret;
-    data.id = ret._id;
+    data.created_at = ret.createdAt;
+    data.updated_at = ret.updatedAt;
+    delete data.createdAt;
+    delete data.updatedAt;
     delete data._id;
     delete data.__v;
     return data;
@@ -36,15 +42,16 @@ HostelSchema.set('toJSON', {
 });
 
 HostelSchema.pre('save', function (next) {
-  const self = this;
+  const hostel = this;
+
   HostelModel.findOne({})
-    .sort({ roomId: -1 })
+    .sort({ id: -1 })
     .exec((err, data) => {
-      if (!data || !data.roomId) {
-        self.roomId = 1;
+      if (!data || !data.id) {
+        hostel.id = 1;
         next();
       } else {
-        self.roomId = data.roomId + 1;
+        hostel.id = data.id + 1;
         next();
       }
     });

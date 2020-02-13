@@ -35,6 +35,13 @@
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.0.3.tgz#e49e637d5de8faa4f0d313c2590b455d7c00afd7"
   integrity sha512-jKtjLLDiH95b002sJVc5c74PE6KKYftuyVdVmsuYId5stTaWcRFqE+5ukZI4gDUKjGn8wv2C3zPn3/nyjEI7gg==
 
+"@hapi/joi-date@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@hapi/joi-date/-/joi-date-2.0.1.tgz#9d63bcc320fa64d9bb7a9b7f6ee3c1831019cbbb"
+  integrity sha512-8be8JUEC8Wm1Do3ryJy+TXmkAL13b2JwXn7gILBoor8LopY/M+hJskodzOOxfJdckkfWnbmbnMEyJW3d/gZMfA==
+  dependencies:
+    moment "2.x.x"
+
 "@hapi/joi@^17.1.0":
   version "17.1.0"
   resolved "https://registry.yarnpkg.com/@hapi/joi/-/joi-17.1.0.tgz#cc4000b6c928a6a39b9bef092151b6bdee10ce55"
@@ -1657,7 +1664,7 @@ moment-timezone@^0.5.27:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.24.0:
+moment@2.x.x, "moment@>= 2.9.0", moment@^2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
