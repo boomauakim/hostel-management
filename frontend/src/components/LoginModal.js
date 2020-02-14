@@ -31,10 +31,6 @@ const SignupText = styled.span`
 `;
 
 class LoginModal extends Component {
-  componentDidMount() {
-    console.log('LoginModal');
-  }
-
   render() {
     const { visible } = this.props;
 

@@ -4,7 +4,6 @@ import { Col, Row } from 'antd';
 
 import SampleImage from '../assets/images/sample-image.webp';
 import Container from '../components/Container';
-import LoginModal from '../components/LoginModal';
 
 const HomeContainer = styled.div`
   padding: 20px 0px;
