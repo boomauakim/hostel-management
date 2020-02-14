@@ -97,7 +97,6 @@ class Home extends Component {
             </Col>
           </Row>
         </HomeContainer>
-        <LoginModal visible />
       </Container>
     );
   }
