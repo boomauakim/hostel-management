@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
+import AuthRoute from '../components/AuthRoute';
 import Layout from '../components/Layout';
 import Home from '../pages/Home';
 import Hostel from '../pages/Hostel';
@@ -12,9 +13,15 @@ const Router = () => (
       <Route path="/">
         <Layout>
           <Switch>
-            <Route path="/hostels/:id" component={Hostel} />
-            <Route path="/me/bookings" component={MyBooking} />
-            <Route path="/" component={Home} />
+            <AuthRoute path="/me/bookings">
+              <MyBooking />
+            </AuthRoute>
+            <Route path="/hostels/:id">
+              <Hostel />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
           </Switch>
         </Layout>
       </Route>

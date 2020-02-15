@@ -7,5 +7,6 @@ module.exports = {
   plugins: ["jsx-a11y", "prettier"],
   rules: {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/state-in-constructor": [1, "never"]
   }
 }

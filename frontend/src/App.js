@@ -2,6 +2,7 @@ import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import 'antd/dist/antd.css';
 
+import { ClientProvider } from './contexts/ClientContext';
 import Router from './router';
 
 const GlobalStyle = createGlobalStyle`
@@ -18,10 +19,10 @@ body {
 
 function App() {
   return (
-    <>
+    <ClientProvider>
       <GlobalStyle />
       <Router />
-    </>
+    </ClientProvider>
   );
 }
 

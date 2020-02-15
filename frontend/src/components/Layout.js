@@ -1,20 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import NavBar from './NavBar';
 
-class Layout extends Component {
-  render() {
-    const { children } = this.props;
-
-    return (
-      <>
-        <NavBar />
-        <>{children}</>
-      </>
-    );
-  }
-}
+const Layout = ({ children }) => (
+  <>
+    <NavBar />
+    <>{children}</>
+  </>
+);
 
 
 Layout.propTypes = {

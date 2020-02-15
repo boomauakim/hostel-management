@@ -8,6 +8,9 @@ import {
 } from 'antd';
 
 import MountainsIcon from '../assets/icons/mountains-light.svg';
+import { ClientContext } from '../contexts/ClientContext';
+import LoginModal from './LoginModal';
+import SignupModal from './SignupModal';
 
 const { RangePicker } = DatePicker;
 
@@ -86,52 +89,121 @@ const FilterItem = styled.div`
 `;
 
 class NavBar extends Component {
+  state = {
+    loginModalVisible: false,
+    signupModalVisible: false,
+    signupSuccess: false,
+  }
+
+  handleLoginModalVisible = (visible) => {
+    this.setState({ loginModalVisible: visible });
+  }
+
+  handleSignupModalVisible = (visible) => {
+    this.setState({ signupModalVisible: visible });
+  }
+
+  handleChangeModal = (modal, options) => {
+    if (modal === 'login') {
+      this.setState({
+        loginModalVisible: true,
+        signupModalVisible: false,
+        ...options,
+      });
+    } else if (modal === 'signup') {
+      this.setState({
+        loginModalVisible: false,
+        signupModalVisible: true,
+      });
+    }
+  }
+
+  handleLogout = () => {
+    const client = this.context;
+    client.setToken('');
+  }
+
   render() {
+    const client = this.context;
     const { location } = this.props;
+    const {
+      loginModalVisible, signupModalVisible, signupSuccess,
+    } = this.state;
 
     return (
-      <Affix offsetTop={0}>
-        <NavBarContainer>
-          <Row type="flex" align="middle">
-            <Col span={12}>
-              <MainContainer>
-                <LogoContainer>
-                  <LogoIcon src={MountainsIcon} />
-                </LogoContainer>
-                <AutoComplete
-                  dropdownMatchSelectWidth={false}
-                  size="large"
-                  style={{ width: '350px' }}
-                  placeholder="Search"
-                >
-                  <Input suffix={<Icon type="search" />} />
-                </AutoComplete>
-              </MainContainer>
-            </Col>
-            <Col span={12}>
-              <MenuContainer>
-                <TextLink>My Booking</TextLink>
-                <TextLink>Sign up</TextLink>
-                <TextLink>Log in</TextLink>
-              </MenuContainer>
-            </Col>
-          </Row>
-        </NavBarContainer>
-        {(location.pathname === '/' || location.pathname === '/hostels') && (
-        <FilterContainer>
-          <FilterItemContainer>
-            <FilterItem>
-              <b>Available: </b>
-              <RangePicker size="small" suffixIcon={<></>} allowClear={false} />
-            </FilterItem>
-          </FilterItemContainer>
-        </FilterContainer>
-        )}
-      </Affix>
+      <>
+        <Affix offsetTop={0}>
+          <NavBarContainer>
+            <Row type="flex" align="middle">
+              <Col span={12}>
+                <MainContainer>
+                  <LogoContainer>
+                    <LogoIcon src={MountainsIcon} />
+                  </LogoContainer>
+                  <AutoComplete
+                    dropdownMatchSelectWidth={false}
+                    size="large"
+                    style={{ width: '350px' }}
+                    placeholder="Search"
+                  >
+                    <Input suffix={<Icon type="search" />} />
+                  </AutoComplete>
+                </MainContainer>
+              </Col>
+              <Col span={12}>
+                <MenuContainer>
+                  {client.token && (
+                    <>
+                      <TextLink>My Booking</TextLink>
+                      <TextLink onClick={() => this.handleLogout()}>Log out</TextLink>
+                    </>
+                  )}
+                  {!client.token && (
+                    <>
+                      <TextLink
+                        onClick={() => { this.handleSignupModalVisible(true); }}
+                      >
+                        Sign up
+                      </TextLink>
+                      <TextLink
+                        onClick={() => { this.handleLoginModalVisible(true); }}
+                      >
+                        Log in
+                      </TextLink>
+                    </>
+                  )}
+                </MenuContainer>
+              </Col>
+            </Row>
+          </NavBarContainer>
+          {(location.pathname === '/' || location.pathname === '/hostels') && (
+          <FilterContainer>
+            <FilterItemContainer>
+              <FilterItem>
+                <b>Available: </b>
+                <RangePicker size="small" suffixIcon={<></>} allowClear={false} />
+              </FilterItem>
+            </FilterItemContainer>
+          </FilterContainer>
+          )}
+        </Affix>
+        <LoginModal
+          visible={loginModalVisible}
+          handleVisible={this.handleLoginModalVisible}
+          handleChangeModal={this.handleChangeModal}
+          signupSuccess={signupSuccess}
+        />
+        <SignupModal
+          visible={signupModalVisible}
+          handleVisible={this.handleSignupModalVisible}
+          handleChangeModal={this.handleChangeModal}
+        />
+      </>
     );
   }
 }
 
+NavBar.contextType = ClientContext;
 NavBar.propTypes = {
   location: PropTypes.object.isRequired,
 };
