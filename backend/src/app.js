@@ -5,6 +5,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const routes = require('./routes');
 const body = require('./utils/body');
@@ -12,6 +13,7 @@ const logger = require('./utils/logger');
 
 const app = express();
 
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use('/api', routes);

@@ -49,7 +49,7 @@ const signUp = async (req, res) => {
       password: Joi.string().required(),
       firstName: Joi.string().required(),
       lastName: Joi.string().required(),
-      birthDate: Joi.string().required(),
+      birthday: Joi.string().required(),
     });
     const payload = await schema.validateAsync(req.body);
 

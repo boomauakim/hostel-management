@@ -16,7 +16,7 @@ const UserSchema = new Schema({
   password: String,
   firstName: String,
   lastName: String,
-  birthDate: String,
+  birthday: String,
 });
 
 UserSchema.set('timestamps', true);
