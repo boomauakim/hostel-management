@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import {
-  Button, Carousel, Col, DatePicker, InputNumber, Row,
-} from 'antd';
+import { Button, Carousel, Col, DatePicker, InputNumber, Row } from 'antd';
 import GoogleMapReact from 'google-map-react';
 
 import ElevatorIcon from '../assets/icons/sort-circle-light.svg';
@@ -85,7 +83,7 @@ const SectionText = styled.div`
 `;
 
 const HostelDesc = styled.div`
-text-align: justify;
+  text-align: justify;
 `;
 
 const AmenitiesItem = styled.div`
@@ -95,7 +93,7 @@ const AmenitiesItem = styled.div`
 `;
 
 const AmenitiesIcon = styled.img`
- width: 20px;
+  width: 20px;
 `;
 
 const AmenitiesText = styled.span`
@@ -141,11 +139,11 @@ const Label = styled.div`
 class Hostel extends Component {
   handleNext = () => {
     this.carousel.next();
-  }
+  };
 
   handlePrevious = () => {
     this.carousel.prev();
-  }
+  };
 
   render() {
     return (
@@ -163,46 +161,62 @@ class Hostel extends Component {
                   <Next src={NextIcon} />
                 </NextIconContainer>
               </NextContainer>
-              <Carousel ref={(c) => { this.carousel = c; }}>
+              <Carousel
+                ref={c => {
+                  this.carousel = c;
+                }}
+              >
                 <HostelImage />
                 <HostelImage />
               </Carousel>
-              <HostelNameText>
-                180° VIEW, PRIVATE POOL VILLA..
-              </HostelNameText>
+              <HostelNameText>180° VIEW, PRIVATE POOL VILLA..</HostelNameText>
               <div>Thailand</div>
               <Hr margin={25} />
               <HostelDesc>
-                Brand new luxury villa in North Bali with stunning uninterrupted sea views. Completed in 2015,
+                Brand new luxury villa in North Bali with stunning uninterrupted
+                sea views. Completed in 2015,
                 <br />
                 <br />
-                We have 3 almost identical listings, so please check out the other 2 in case this one is booked.
+                We have 3 almost identical listings, so please check out the
+                other 2 in case this one is booked.
                 <br />
                 <br />
-                https://www.airbnb.com/manage-listing/5155854
-                and
+                https://www.airbnb.com/manage-listing/5155854 and
                 https://www.airbnb.com/manage-listing/1873760
                 <br />
                 <br />
-                Villa Sanglung, which is surrounded by nature with stunning, uninterrupted ocean views is the perfect place to relax and enjoy cooling breezes from its elevated position. This is Bali from 25 years ago.
+                Villa Sanglung, which is surrounded by nature with stunning,
+                uninterrupted ocean views is the perfect place to relax and
+                enjoy cooling breezes from its elevated position. This is Bali
+                from 25 years ago.
                 <br />
                 <br />
-                The villa has 2 large bedrooms both with en-suite bathrooms and the master en-suite includes a bathtub.
+                The villa has 2 large bedrooms both with en-suite bathrooms and
+                the master en-suite includes a bathtub.
                 <br />
                 <br />
-                An open concept living area including kitchen and third fully equipped bathroom, leads out to an open air living / dining area and terrace.
+                An open concept living area including kitchen and third fully
+                equipped bathroom, leads out to an open air living / dining area
+                and terrace.
                 <br />
                 <br />
-                Upstairs there is a lovely open plan very versatile living space with timber floors, and more incredible views.
+                Upstairs there is a lovely open plan very versatile living space
+                with timber floors, and more incredible views.
                 <br />
                 <br />
-                An infinity pool completes the outdoor space where you can relax whilst enjoying the full view toward Singaraja the sea and beyond.
+                An infinity pool completes the outdoor space where you can relax
+                whilst enjoying the full view toward Singaraja the sea and
+                beyond.
                 <br />
                 <br />
-                The villa sleeps up to 8 guests and provides staff and night security.
+                The villa sleeps up to 8 guests and provides staff and night
+                security.
                 <br />
                 <br />
-                The villa has been designed for those who want to relax and enjoy the peace and quite of Bali from 25 years ago with the convenience of being located not far from the beach and Singaraja.
+                The villa has been designed for those who want to relax and
+                enjoy the peace and quite of Bali from 25 years ago with the
+                convenience of being located not far from the beach and
+                Singaraja.
               </HostelDesc>
               <Hr margin={25} />
               <SectionText>Amenities</SectionText>
@@ -254,18 +268,30 @@ class Hostel extends Component {
               <BookingContainer>
                 <div>
                   <PriceText>฿5,555</PriceText>
-                &nbsp;per&nbsp;night
+                  &nbsp;per&nbsp;night
                 </div>
                 <Hr margin={15} />
                 <InputContainer>
                   <Label>Dates</Label>
-                  <RangePicker size="large" suffixIcon={<></>} allowClear={false} placeholder={['Checkin', 'Checkout']} />
+                  <RangePicker
+                    size="large"
+                    suffixIcon={<></>}
+                    allowClear={false}
+                    placeholder={['Checkin', 'Checkout']}
+                  />
                 </InputContainer>
                 <InputContainer>
                   <Label>Guests</Label>
-                  <InputNumber size="large" min={1} max={12} placeholder="Guest" />
+                  <InputNumber
+                    size="large"
+                    min={1}
+                    max={12}
+                    placeholder="Guest"
+                  />
                 </InputContainer>
-                <Button block type="primary" size="large"><b>Reserve</b></Button>
+                <Button block type="primary" size="large">
+                  <b>Reserve</b>
+                </Button>
               </BookingContainer>
             </Col>
           </Row>

@@ -29,7 +29,7 @@ const Container = styled.div`
 const ContainerWrapper = ({ children }) => <Container>{children}</Container>;
 
 ContainerWrapper.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default ContainerWrapper;

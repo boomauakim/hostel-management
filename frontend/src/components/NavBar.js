@@ -3,16 +3,12 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {
-  Affix, AutoComplete, Col, DatePicker, Icon, Input, Row,
-} from 'antd';
+import { Affix, AutoComplete, Col, Icon, Input, Row } from 'antd';
 
 import MountainsIcon from '../assets/icons/mountains-light.svg';
 import { ClientContext } from '../contexts/ClientContext';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
-
-const { RangePicker } = DatePicker;
 
 const NavBarContainer = styled.div`
   height: 70px;
@@ -36,6 +32,7 @@ const LogoContainer = styled.div`
 const LogoIcon = styled.img`
   width: 40px;
   margin: 0px 24px 0px 24px;
+  cursor: pointer;
 `;
 
 const MenuContainer = styled.div`
@@ -50,85 +47,49 @@ const TextLink = styled.div`
   cursor: pointer;
 `;
 
-const FilterContainer = styled.div`
-  height: 45px;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ebebeb;
-  padding-left: 80px;
-  background-color: white;
-`;
-
-const FilterItemContainer = styled.div`
-  border: 1px solid #b1b1b1;
-  border-radius: 20px;
-  margin: 0px 10px;
-
-  .ant-input {
-    border: none;
-  }
-
-  .ant-calendar-picker .ant-calendar-picker-input:not(.ant-input-disabled) {
-    :hover {
-      border: none;
-    }
-  }
-
-  .ant-calendar-picker:focus
-    .ant-calendar-picker-input:not(.ant-input-disabled) {
-    border: none;
-    outline: 0;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-  }
-`;
-
-const FilterItem = styled.div`
-  padding: 5px 15px;
-  color: #484848;
-`;
-
 class NavBar extends Component {
   state = {
     loginModalVisible: false,
     signupModalVisible: false,
-    signupSuccess: false,
-  }
+    signupSuccess: false
+  };
 
-  handleLoginModalVisible = (visible) => {
+  handleLoginModalVisible = visible => {
     this.setState({ loginModalVisible: visible });
-  }
+  };
 
-  handleSignupModalVisible = (visible) => {
+  handleSignupModalVisible = visible => {
     this.setState({ signupModalVisible: visible });
-  }
+  };
 
   handleChangeModal = (modal, options) => {
     if (modal === 'login') {
       this.setState({
         loginModalVisible: true,
         signupModalVisible: false,
-        ...options,
+        ...options
       });
     } else if (modal === 'signup') {
       this.setState({
         loginModalVisible: false,
-        signupModalVisible: true,
+        signupModalVisible: true
       });
     }
-  }
+  };
 
   handleLogout = () => {
     const client = this.context;
     client.setToken('');
-  }
+  };
+
+  handleBackToHome = () => {
+    const { history } = this.props;
+    history.push('/');
+  };
 
   render() {
     const client = this.context;
-    const { location } = this.props;
-    const {
-      loginModalVisible, signupModalVisible, signupSuccess,
-    } = this.state;
+    const { loginModalVisible, signupModalVisible, signupSuccess } = this.state;
 
     return (
       <>
@@ -138,7 +99,10 @@ class NavBar extends Component {
               <Col span={12}>
                 <MainContainer>
                   <LogoContainer>
-                    <LogoIcon src={MountainsIcon} />
+                    <LogoIcon
+                      src={MountainsIcon}
+                      onClick={this.handleBackToHome}
+                    />
                   </LogoContainer>
                   <AutoComplete
                     dropdownMatchSelectWidth={false}
@@ -155,18 +119,24 @@ class NavBar extends Component {
                   {client.token && (
                     <>
                       <TextLink>My Booking</TextLink>
-                      <TextLink onClick={() => this.handleLogout()}>Log out</TextLink>
+                      <TextLink onClick={() => this.handleLogout()}>
+                        Log out
+                      </TextLink>
                     </>
                   )}
                   {!client.token && (
                     <>
                       <TextLink
-                        onClick={() => { this.handleSignupModalVisible(true); }}
+                        onClick={() => {
+                          this.handleSignupModalVisible(true);
+                        }}
                       >
                         Sign up
                       </TextLink>
                       <TextLink
-                        onClick={() => { this.handleLoginModalVisible(true); }}
+                        onClick={() => {
+                          this.handleLoginModalVisible(true);
+                        }}
                       >
                         Log in
                       </TextLink>
@@ -176,16 +146,6 @@ class NavBar extends Component {
               </Col>
             </Row>
           </NavBarContainer>
-          {(location.pathname === '/' || location.pathname === '/hostels') && (
-          <FilterContainer>
-            <FilterItemContainer>
-              <FilterItem>
-                <b>Available: </b>
-                <RangePicker size="small" suffixIcon={<></>} allowClear={false} />
-              </FilterItem>
-            </FilterItemContainer>
-          </FilterContainer>
-          )}
         </Affix>
         <LoginModal
           visible={loginModalVisible}
@@ -205,7 +165,7 @@ class NavBar extends Component {
 
 NavBar.contextType = ClientContext;
 NavBar.propTypes = {
-  location: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 export default withRouter(NavBar);

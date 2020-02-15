@@ -16,10 +16,10 @@ const AuthRoute = ({ children }) => {
 };
 
 AuthRoute.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node
 };
 AuthRoute.defaultProps = {
-  children: <></>,
+  children: <></>
 };
 
 export default AuthRoute;

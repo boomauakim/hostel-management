@@ -60,7 +60,9 @@ class MyBooking extends Component {
           <Row gutter={[16, 32]}>
             <Col span={12}>
               <Row>
-                <Col span={8}><HostelImage /></Col>
+                <Col span={8}>
+                  <HostelImage />
+                </Col>
                 <Col span={16}>
                   <BookingContainer>
                     <CityText>Thailand</CityText>

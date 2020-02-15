@@ -1,9 +1,7 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {
-  Alert, Button, Icon, Input, Form, Modal,
-} from 'antd';
+import { Alert, Button, Icon, Input, Form, Modal } from 'antd';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 
@@ -34,15 +32,15 @@ const SignupText = styled.span`
   cursor: pointer;
 `;
 
-const LoginModal = (props) => {
+const LoginModal = props => {
   const client = useContext(ClientContext);
   const [error, setError] = useState(false);
-  const {
-    handleChangeModal, handleVisible, signupSuccess, visible,
-  } = props;
+  const { handleChangeModal, handleVisible, signupSuccess, visible } = props;
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email is invalid.').required('Email is required.'),
-    password: Yup.string().required('Password is required.'),
+    email: Yup.string()
+      .email('Email is invalid.')
+      .required('Email is required.'),
+    password: Yup.string().required('Password is required.')
   });
 
   return (
@@ -51,25 +49,31 @@ const LoginModal = (props) => {
       visible={visible}
       footer={null}
       closeIcon={<img src={CloseIcon} width="25px" alt="close-icon" />}
-      onCancel={() => { handleVisible(false); }}
+      onCancel={() => {
+        handleVisible(false);
+      }}
     >
       <LoginContainer>
         {signupSuccess && (
-        <AlertContainer>
-          <Alert message="Sign up success." type="success" showIcon />
-        </AlertContainer>
+          <AlertContainer>
+            <Alert message="Sign up success." type="success" showIcon />
+          </AlertContainer>
         )}
         {error && (
-        <AlertContainer>
-          <Alert message="Error, Please check your email or password and try again later." type="error" showIcon />
-        </AlertContainer>
+          <AlertContainer>
+            <Alert
+              message="Error, Please check your email or password and try again later."
+              type="error"
+              showIcon
+            />
+          </AlertContainer>
         )}
         <Formik
           initialValues={{ email: '', password: '' }}
           validationSchema={LoginSchema}
-          onSubmit={(values) => {
+          onSubmit={values => {
             login(values)
-              .then((res) => {
+              .then(res => {
                 client.setToken(res.data.access_token);
                 handleVisible(false);
               })
@@ -78,12 +82,12 @@ const LoginModal = (props) => {
               });
           }}
         >
-          {({
-            errors, touched, handleBlur, handleChange, values,
-          }) => (
+          {({ errors, touched, handleBlur, handleChange, values }) => (
             <FormikForm>
               <Form.Item
-                validateStatus={errors.email && touched.email ? 'error' : 'success'}
+                validateStatus={
+                  errors.email && touched.email ? 'error' : 'success'
+                }
                 help={errors.email && touched.email ? errors.email : null}
               >
                 <Input
@@ -93,12 +97,18 @@ const LoginModal = (props) => {
                   value={values.email}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  prefix={
+                    <Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  }
                 />
               </Form.Item>
               <Form.Item
-                validateStatus={errors.password && touched.password ? 'error' : 'success'}
-                help={errors.password && touched.password ? errors.password : null}
+                validateStatus={
+                  errors.password && touched.password ? 'error' : 'success'
+                }
+                help={
+                  errors.password && touched.password ? errors.password : null
+                }
               >
                 <Input.Password
                   name="password"
@@ -107,11 +117,15 @@ const LoginModal = (props) => {
                   value={values.password}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  prefix={
+                    <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                  }
                 />
               </Form.Item>
               <Form.Item>
-                <Button block type="primary" size="large" htmlType="submit"><b>Login</b></Button>
+                <Button block type="primary" size="large" htmlType="submit">
+                  <b>Login</b>
+                </Button>
               </Form.Item>
             </FormikForm>
           )}
@@ -119,7 +133,13 @@ const LoginModal = (props) => {
         <Hr />
         <div>
           Don&apos;t have an account?&nbsp;&nbsp;
-          <SignupText onClick={() => { handleChangeModal('signup'); }}>Sign up</SignupText>
+          <SignupText
+            onClick={() => {
+              handleChangeModal('signup');
+            }}
+          >
+            Sign up
+          </SignupText>
         </div>
       </LoginContainer>
     </Modal>
@@ -130,7 +150,7 @@ LoginModal.propTypes = {
   handleChangeModal: PropTypes.func.isRequired,
   handleVisible: PropTypes.func.isRequired,
   signupSuccess: PropTypes.bool.isRequired,
-  visible: PropTypes.bool.isRequired,
+  visible: PropTypes.bool.isRequired
 };
 
 export default LoginModal;

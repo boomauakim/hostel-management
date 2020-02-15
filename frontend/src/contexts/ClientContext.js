@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export const ClientContext = React.createContext({
   token: '',
-  setToken: () => null,
+  setToken: () => null
 });
 
 export const ClientProvider = ({ children }) => {
@@ -24,5 +24,5 @@ export const ClientProvider = ({ children }) => {
 };
 
 ClientProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };

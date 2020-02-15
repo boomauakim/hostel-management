@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {
-  Alert, Button, DatePicker, Form, Icon, Input, Modal,
-} from 'antd';
+import { Alert, Button, DatePicker, Form, Icon, Input, Modal } from 'antd';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
@@ -18,7 +16,7 @@ const SignupContainer = styled.div`
     width: 100%;
   }
 
-  .ant-calendar-picker-icon  {
+  .ant-calendar-picker-icon {
     left: 12px;
     right: 0px;
   }
@@ -55,23 +53,25 @@ class SignupModal extends Component {
       lastName: '',
       birthday: '',
       password: '',
-      confirmPassword: '',
+      confirmPassword: ''
     },
-    error: undefined,
-  }
+    error: undefined
+  };
 
   render() {
     const { error, initialValues } = this.state;
     const { visible, handleChangeModal, handleVisible } = this.props;
     const LoginSchema = Yup.object().shape({
-      email: Yup.string().email('Email is invalid.').required('Email is required.'),
+      email: Yup.string()
+        .email('Email is invalid.')
+        .required('Email is required.'),
       firstName: Yup.string().required('First name is required.'),
       lastName: Yup.string().required('Last name is required.'),
       birthday: Yup.string().required('Birthday is required.'),
       password: Yup.string().required('Password is required.'),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Passwords must match.')
-        .required('Confirm Password is required.'),
+        .required('Confirm Password is required.')
     });
 
     return (
@@ -87,12 +87,20 @@ class SignupModal extends Component {
         <SignupContainer>
           {error && error === 'DUPLICATE_EMAIL' && (
             <AlertContainer>
-              <Alert message="Email is already used. Please change email and continue." type="error" showIcon />
+              <Alert
+                message="Email is already used. Please change email and continue."
+                type="error"
+                showIcon
+              />
             </AlertContainer>
           )}
           {error && error !== 'DUPLICATE_EMAIL' && (
             <AlertContainer>
-              <Alert message="Something went wrong, Please try again later." type="error" showIcon />
+              <Alert
+                message="Something went wrong, Please try again later."
+                type="error"
+                showIcon
+              />
             </AlertContainer>
           )}
           <Formik
@@ -106,18 +114,18 @@ class SignupModal extends Component {
                   resetForm(initialValues);
                   handleChangeModal('login', { signupSuccess: true });
                 })
-                .catch((err) => {
+                .catch(err => {
                   const { errors } = err.response.data;
                   this.setState({ error: errors.error });
                 });
             }}
           >
-            {({
-              errors, touched, handleBlur, handleChange, values,
-            }) => (
+            {({ errors, touched, handleBlur, handleChange, values }) => (
               <FormikForm>
                 <Form.Item
-                  validateStatus={errors.email && touched.email ? 'error' : 'success'}
+                  validateStatus={
+                    errors.email && touched.email ? 'error' : 'success'
+                  }
                   help={errors.email && touched.email ? errors.email : null}
                 >
                   <Input
@@ -127,12 +135,20 @@ class SignupModal extends Component {
                     value={values.email}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    prefix={
+                      <Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
                   />
                 </Form.Item>
                 <Form.Item
-                  validateStatus={errors.firstName && touched.firstName ? 'error' : 'success'}
-                  help={errors.firstName && touched.firstName ? errors.firstName : null}
+                  validateStatus={
+                    errors.firstName && touched.firstName ? 'error' : 'success'
+                  }
+                  help={
+                    errors.firstName && touched.firstName
+                      ? errors.firstName
+                      : null
+                  }
                 >
                   <Input
                     name="firstName"
@@ -141,12 +157,18 @@ class SignupModal extends Component {
                     value={values.firstName}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    prefix={
+                      <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
                   />
                 </Form.Item>
                 <Form.Item
-                  validateStatus={errors.lastName && touched.lastName ? 'error' : 'success'}
-                  help={errors.lastName && touched.lastName ? errors.lastName : null}
+                  validateStatus={
+                    errors.lastName && touched.lastName ? 'error' : 'success'
+                  }
+                  help={
+                    errors.lastName && touched.lastName ? errors.lastName : null
+                  }
                 >
                   <Input
                     name="lastName"
@@ -155,12 +177,18 @@ class SignupModal extends Component {
                     value={values.lastName}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    prefix={
+                      <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
                   />
                 </Form.Item>
                 <Form.Item
-                  validateStatus={errors.birthday && touched.birthday ? 'error' : 'success'}
-                  help={errors.birthday && touched.birthday ? errors.birthday : null}
+                  validateStatus={
+                    errors.birthday && touched.birthday ? 'error' : 'success'
+                  }
+                  help={
+                    errors.birthday && touched.birthday ? errors.birthday : null
+                  }
                 >
                   <DatePicker
                     block
@@ -169,14 +197,20 @@ class SignupModal extends Component {
                     size="large"
                     value={values?.birthday ? moment(values.birthday) : null}
                     onBlur={handleBlur('birthday')}
-                    // eslint-disable-next-line no-param-reassign
-                    onChange={(value) => { values.birthday = value ? value.format('YYYY-MM-DD') : ''; }}
+                    onChange={value => {
+                      // eslint-disable-next-line no-param-reassign
+                      values.birthday = value ? value.format('YYYY-MM-DD') : '';
+                    }}
                     placeholder="Birthday"
                   />
                 </Form.Item>
                 <Form.Item
-                  validateStatus={errors.password && touched.password ? 'error' : 'success'}
-                  help={errors.password && touched.password ? errors.password : null}
+                  validateStatus={
+                    errors.password && touched.password ? 'error' : 'success'
+                  }
+                  help={
+                    errors.password && touched.password ? errors.password : null
+                  }
                 >
                   <Input.Password
                     name="password"
@@ -185,14 +219,22 @@ class SignupModal extends Component {
                     value={values.password}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    prefix={
+                      <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
                   />
                 </Form.Item>
                 <Form.Item
-                  validateStatus={errors.confirmPassword
-                    && touched.confirmPassword ? 'error' : 'success'}
-                  help={errors.confirmPassword
-                    && touched.confirmPassword ? errors.confirmPassword : null}
+                  validateStatus={
+                    errors.confirmPassword && touched.confirmPassword
+                      ? 'error'
+                      : 'success'
+                  }
+                  help={
+                    errors.confirmPassword && touched.confirmPassword
+                      ? errors.confirmPassword
+                      : null
+                  }
                 >
                   <Input.Password
                     name="confirmPassword"
@@ -201,11 +243,15 @@ class SignupModal extends Component {
                     value={values.confirmPassword}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    prefix={
+                      <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
+                    }
                   />
                 </Form.Item>
                 <Form.Item>
-                  <Button block type="primary" size="large" htmlType="submit"><b>Sign up</b></Button>
+                  <Button block type="primary" size="large" htmlType="submit">
+                    <b>Sign up</b>
+                  </Button>
                 </Form.Item>
               </FormikForm>
             )}
@@ -213,7 +259,13 @@ class SignupModal extends Component {
           <Hr />
           <div>
             Already have an account?&nbsp;&nbsp;
-            <LoginText onClick={() => { handleChangeModal('login'); }}>Log in</LoginText>
+            <LoginText
+              onClick={() => {
+                handleChangeModal('login');
+              }}
+            >
+              Log in
+            </LoginText>
           </div>
         </SignupContainer>
       </Modal>
@@ -224,7 +276,7 @@ class SignupModal extends Component {
 SignupModal.propTypes = {
   handleChangeModal: PropTypes.func.isRequired,
   handleVisible: PropTypes.func.isRequired,
-  visible: PropTypes.bool.isRequired,
+  visible: PropTypes.bool.isRequired
 };
 
 export default SignupModal;

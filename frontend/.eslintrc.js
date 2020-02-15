@@ -3,6 +3,7 @@ module.exports = {
     "react-app",
     "airbnb", 
     "plugin:jsx-a11y/recommended", 
+    "plugin:prettier/recommended", 
   ],
   plugins: ["jsx-a11y", "prettier"],
   rules: {
