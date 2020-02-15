@@ -1,10 +1,15 @@
-import React from 'react';
+/* eslint-disable react/forbid-prop-types, import/no-extraneous-dependencies */
+import React, { Component } from 'react';
+import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {
-  Affix, AutoComplete, Col, Icon, Input, Row,
+  Affix, AutoComplete, Col, DatePicker, Icon, Input, Row,
 } from 'antd';
 
 import MountainsIcon from '../assets/icons/mountains-light.svg';
+
+const { RangePicker } = DatePicker;
 
 const NavBarContainer = styled.div`
   height: 70px;
@@ -55,50 +60,80 @@ const FilterItemContainer = styled.div`
   border: 1px solid #b1b1b1;
   border-radius: 20px;
   margin: 0px 10px;
-  cursor: pointer;
 
-  :hover {
-    border: 1px solid #484848;
+  .ant-input {
+    border: none;
+  }
+
+  .ant-calendar-picker .ant-calendar-picker-input:not(.ant-input-disabled) {
+    :hover {
+      border: none;
+    }
+  }
+
+  .ant-calendar-picker:focus
+    .ant-calendar-picker-input:not(.ant-input-disabled) {
+    border: none;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
   }
 `;
 
-const FilterText = styled.div`
+const FilterItem = styled.div`
   padding: 5px 15px;
   color: #484848;
 `;
 
-const NavBar = () => (
-  <Affix offsetTop={0}>
-    <NavBarContainer>
-      <Row type="flex" align="middle">
-        <Col span={12}>
-          <MainContainer>
-            <LogoContainer>
-              <LogoIcon src={MountainsIcon} />
-            </LogoContainer>
-            <AutoComplete
-              dropdownMatchSelectWidth={false}
-              size="large"
-              style={{ width: '350px' }}
-              placeholder="Search"
-            >
-              <Input suffix={<Icon type="search" />} />
-            </AutoComplete>
-          </MainContainer>
-        </Col>
-        <Col span={12}>
-          <MenuContainer>
-            <TextLink>My Booking</TextLink>
-            <TextLink>Sign up</TextLink>
-            <TextLink>Log in</TextLink>
-          </MenuContainer>
-        </Col>
-      </Row>
-    </NavBarContainer>
-    <FilterContainer>
-      <FilterItemContainer><FilterText>Available</FilterText></FilterItemContainer>
-    </FilterContainer>
-  </Affix>
-);
+class NavBar extends Component {
+  render() {
+    const { location } = this.props;
 
-export default NavBar;
+    return (
+      <Affix offsetTop={0}>
+        <NavBarContainer>
+          <Row type="flex" align="middle">
+            <Col span={12}>
+              <MainContainer>
+                <LogoContainer>
+                  <LogoIcon src={MountainsIcon} />
+                </LogoContainer>
+                <AutoComplete
+                  dropdownMatchSelectWidth={false}
+                  size="large"
+                  style={{ width: '350px' }}
+                  placeholder="Search"
+                >
+                  <Input suffix={<Icon type="search" />} />
+                </AutoComplete>
+              </MainContainer>
+            </Col>
+            <Col span={12}>
+              <MenuContainer>
+                <TextLink>My Booking</TextLink>
+                <TextLink>Sign up</TextLink>
+                <TextLink>Log in</TextLink>
+              </MenuContainer>
+            </Col>
+          </Row>
+        </NavBarContainer>
+        {(location.pathname === '/' || location.pathname === '/hostels') && (
+        <FilterContainer>
+          <FilterItemContainer>
+            <FilterItem>
+              <b>Available: </b>
+              <RangePicker size="small" suffixIcon={<></>} allowClear={false} />
+            </FilterItem>
+          </FilterItemContainer>
+        </FilterContainer>
+        )}
+      </Affix>
+    );
+  }
+}
+
+NavBar.propTypes = {
+  location: PropTypes.object.isRequired,
+};
+
+export default withRouter(NavBar);
