@@ -7,16 +7,16 @@ const { Schema } = require('mongoose');
 const UserSchema = new Schema({
   id: {
     type: Number,
-    unique: true,
+    unique: true
   },
   email: {
     type: String,
-    unique: true,
+    unique: true
   },
   password: String,
   firstName: String,
   lastName: String,
-  birthday: String,
+  birthday: String
 });
 
 UserSchema.set('timestamps', true);
@@ -31,10 +31,10 @@ UserSchema.set('toJSON', {
     delete data.__v;
     delete data.password;
     return data;
-  },
+  }
 });
 
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', function(next) {
   const user = this;
 
   UserModel.findOne({})
@@ -53,7 +53,7 @@ UserSchema.pre('save', function (next) {
     });
 });
 
-UserSchema.methods.isValidPassword = async function (password) {
+UserSchema.methods.isValidPassword = async function(password) {
   const user = this;
   const compare = await bcrypt.compare(password, user.password);
   return compare;

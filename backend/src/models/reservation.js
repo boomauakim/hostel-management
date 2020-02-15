@@ -6,14 +6,14 @@ const { Schema } = mongoose;
 const ReservationSchema = new Schema({
   hostel: {
     type: Schema.Types.ObjectId,
-    ref: 'Hostel',
+    ref: 'Hostel'
   },
   booking: {
     type: Schema.Types.ObjectId,
-    ref: 'Booking',
+    ref: 'Booking'
   },
   date: Date,
-  status: String,
+  status: String
 });
 
 ReservationSchema.set('timestamps', true);
@@ -27,10 +27,10 @@ ReservationSchema.set('toJSON', {
     delete data._id;
     delete data.__v;
     return data;
-  },
+  }
 });
 
-ReservationSchema.pre('save', async function (next) {
+ReservationSchema.pre('save', async function(next) {
   const reservation = this;
 
   await ReservationModel.findOne({})

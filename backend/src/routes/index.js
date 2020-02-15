@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.use('/', auth);
 router.use('/bookings', jwt({ secret: process.env.SECRET_KEY }), booking);
-router.use('/hostels', jwt({ secret: process.env.SECRET_KEY }), hostel);
+router.use('/hostels', hostel);
 router.use('/me', jwt({ secret: process.env.SECRET_KEY }), me);
 
 module.exports = router;

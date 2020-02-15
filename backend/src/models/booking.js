@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const BookingSchema = new Schema({
   id: {
     type: Number,
-    unique: true,
+    unique: true
   },
   date: Date,
   checkIn: Date,
@@ -14,12 +14,12 @@ const BookingSchema = new Schema({
   status: String,
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'User'
   },
   hostel: {
     type: Schema.Types.ObjectId,
-    ref: 'Hostel',
-  },
+    ref: 'Hostel'
+  }
 });
 
 BookingSchema.set('timestamps', true);
@@ -37,10 +37,10 @@ BookingSchema.set('toJSON', {
     delete data._id;
     delete data.__v;
     return data;
-  },
+  }
 });
 
-BookingSchema.pre('save', function (next) {
+BookingSchema.pre('save', function(next) {
   const booking = this;
 
   BookingModel.findOne({})

@@ -9,23 +9,32 @@ const logger = require('../utils/logger');
 const login = async (req, res) => {
   try {
     const schema = Joi.object({
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
+      email: Joi.string()
+        .email()
+        .required(),
+      password: Joi.string().required()
     });
     const payload = await schema.validateAsync(req.body);
 
     try {
       const user = await UserModel.findOne({ email: payload.email });
       if (!user) {
-        return res.status(401).send(body.error('UNAUTHORIZED', 'Email or Password is incorrect.'));
+        return res
+          .status(401)
+          .send(body.error('UNAUTHORIZED', 'Email or Password is incorrect.'));
       }
 
       const validate = await user.isValidPassword(payload.password);
       if (!validate) {
-        return res.status(401).send(body.error('UNAUTHORIZED', 'Email or Password is incorrect.'));
+        return res
+          .status(401)
+          .send(body.error('UNAUTHORIZED', 'Email or Password is incorrect.'));
       }
 
-      const token = jwt.sign({ uid: user.toObject()._id }, process.env.SECRET_KEY);
+      const token = jwt.sign(
+        { uid: user.toObject()._id },
+        process.env.SECRET_KEY
+      );
 
       return res.status(200).send({ access_token: token });
     } catch (err) {
@@ -35,7 +44,9 @@ const login = async (req, res) => {
   } catch (err) {
     if (err.details) {
       const { message } = err.details[0];
-      return res.status(400).send(body.error(body.errorMsg.INVALID_PARAMETER, message));
+      return res
+        .status(400)
+        .send(body.error(body.errorMsg.INVALID_PARAMETER, message));
     }
     logger.error(err.stack);
     return res.status(500).send(body.error());
@@ -45,11 +56,13 @@ const login = async (req, res) => {
 const signUp = async (req, res) => {
   try {
     const schema = Joi.object({
-      email: Joi.string().email().required(),
+      email: Joi.string()
+        .email()
+        .required(),
       password: Joi.string().required(),
       firstName: Joi.string().required(),
       lastName: Joi.string().required(),
-      birthday: Joi.string().required(),
+      birthday: Joi.string().required()
     });
     const payload = await schema.validateAsync(req.body);
 
@@ -59,7 +72,9 @@ const signUp = async (req, res) => {
       return res.status(201).send();
     } catch (err) {
       if (err.code === 11000) {
-        return res.status(400).send(body.error('DUPLICATE_EMAIL', 'Email is duplicate.'));
+        return res
+          .status(400)
+          .send(body.error('DUPLICATE_EMAIL', 'Email is duplicate.'));
       }
       logger.error(err.stack);
       return res.status(500).send(body.error());
@@ -67,7 +82,9 @@ const signUp = async (req, res) => {
   } catch (err) {
     if (err.details) {
       const { message } = err.details[0];
-      return res.status(400).send(body.error(body.errorMsg.INVALID_PARAMETER, message));
+      return res
+        .status(400)
+        .send(body.error(body.errorMsg.INVALID_PARAMETER, message));
     }
     logger.error(err.stack);
     return res.status(500).send(body.error());

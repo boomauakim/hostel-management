@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const HostelSchema = new Schema({
   id: {
     type: Number,
-    unique: true,
+    unique: true
   },
   name: String,
   price: Number,
@@ -16,16 +16,18 @@ const HostelSchema = new Schema({
   location: {
     gmap: {
       lat: Number,
-      lng: Number,
+      lng: Number
     },
     country: String,
-    city: String,
-  },
-  guest: Number,
-  room: Object,
+    city: String
+  }
 });
 
-HostelSchema.index({ name: 'text', 'location.country': 'text', 'location.city': 'text' });
+HostelSchema.index({
+  name: 'text',
+  'location.country': 'text',
+  'location.city': 'text'
+});
 
 HostelSchema.set('timestamps', true);
 HostelSchema.set('toJSON', {
@@ -38,10 +40,10 @@ HostelSchema.set('toJSON', {
     delete data._id;
     delete data.__v;
     return data;
-  },
+  }
 });
 
-HostelSchema.pre('save', function (next) {
+HostelSchema.pre('save', function(next) {
   const hostel = this;
 
   HostelModel.findOne({})
