@@ -166,9 +166,19 @@ class Hostel extends Component {
     success: false
   };
 
-  constructor(props) {
-    super(props);
-    this.getHostelDetail();
+  async componentDidMount() {
+    const { history } = this.props;
+
+    await this.getHostelDetail();
+
+    this.unlisten = history.listen(async () => {
+      await this.setState({ hostel: {}, bookingCalendarList: {} });
+      await this.getHostelDetail();
+    });
+  }
+
+  componentWillUnmount() {
+    this.unlisten();
   }
 
   getHostelDetail = async () => {
@@ -472,6 +482,7 @@ class Hostel extends Component {
 
 Hostel.contextType = ClientContext;
 Hostel.propTypes = {
+  history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired
 };
 

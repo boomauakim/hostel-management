@@ -118,10 +118,11 @@ class MyBooking extends Component {
     const { history } = this.props;
     const client = this.context;
 
-    this.getMyBooking(client.token);
+    await this.getMyBooking(client.token);
 
-    this.unlisten = history.listen(() => {
-      this.getMyBooking(client.token);
+    this.unlisten = history.listen(async () => {
+      await this.setState({ bookings: [] });
+      await this.getMyBooking(client.token);
     });
   }
 

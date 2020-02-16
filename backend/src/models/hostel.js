@@ -23,12 +23,6 @@ const HostelSchema = new Schema({
   }
 });
 
-HostelSchema.index({
-  name: 'text',
-  'location.country': 'text',
-  'location.city': 'text'
-});
-
 HostelSchema.set('timestamps', true);
 HostelSchema.set('toJSON', {
   transform: (doc, ret) => {

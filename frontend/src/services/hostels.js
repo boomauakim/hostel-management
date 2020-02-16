@@ -13,9 +13,13 @@ export const getAvailableHostel = (startDate, endDate) =>
 
 export const getHostelData = id => axios.get(`/hostels/${id}`);
 
+export const searchHostel = query =>
+  axios.get(`/hostels/search?query=${query}`);
+
 export default {
   getAllHostels,
   getAllHostelsByLink,
   getAvailableHostel,
-  getHostelData
+  getHostelData,
+  searchHostel
 };

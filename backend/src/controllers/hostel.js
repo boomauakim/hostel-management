@@ -170,11 +170,26 @@ const createHostel = async (req, res) => {
 };
 
 const searchHotel = async (req, res) => {
-  const { query } = req.query;
+  const query = req.query.query ? req.query.query : '';
 
   try {
     const data = await HostelModel.find(
-      { $text: { $search: query } },
+      {
+        $or: [
+          {
+            name: {
+              $regex: query,
+              $options: 'i'
+            }
+          },
+          {
+            'location.city': {
+              $regex: query,
+              $options: 'i'
+            }
+          }
+        ]
+      },
       'id name location.country location.city'
     );
 

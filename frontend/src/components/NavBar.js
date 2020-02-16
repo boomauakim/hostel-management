@@ -1,14 +1,15 @@
-/* eslint-disable react/forbid-prop-types, import/no-extraneous-dependencies */
+/* eslint-disable react/forbid-prop-types, import/no-extraneous-dependencies, no-restricted-syntax  */
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Affix, AutoComplete, Col, Icon, Input, Row } from 'antd';
 
-import MountainsIcon from '../assets/icons/mountains-light.svg';
-import { ClientContext } from '../contexts/ClientContext';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
+import MountainsIcon from '../assets/icons/mountains-light.svg';
+import { ClientContext } from '../contexts/ClientContext';
+import { searchHostel } from '../services/hostels';
 
 const NavBarContainer = styled.div`
   height: 70px;
@@ -51,7 +52,10 @@ class NavBar extends Component {
   state = {
     loginModalVisible: false,
     signupModalVisible: false,
-    signupSuccess: false
+    signupSuccess: false,
+    autoValue: '',
+    autoSource: [],
+    hostels: {}
   };
 
   handleLoginModalVisible = visible => {
@@ -92,9 +96,43 @@ class NavBar extends Component {
     history.push('/me/bookings');
   };
 
+  handleSearch = () => {
+    const { autoValue } = this.state;
+
+    searchHostel(autoValue).then(({ data }) => {
+      const searchResult = [];
+      const hostelResult = {};
+
+      for (const result of data.hostels) {
+        searchResult.push(result.name);
+        hostelResult[result.name] = result.id;
+      }
+
+      this.setState({ autoSource: searchResult, hostels: hostelResult });
+    });
+  };
+
+  handleSearchTextChange = value => {
+    this.setState({ autoValue: value });
+  };
+
+  handleSelectItem = value => {
+    const { history } = this.props;
+    const { hostels } = this.state;
+
+    this.setState({ autoValue: '', autoSource: [] });
+    history.replace(`/hostels/${hostels[value]}`);
+  };
+
   render() {
     const client = this.context;
-    const { loginModalVisible, signupModalVisible, signupSuccess } = this.state;
+    const {
+      loginModalVisible,
+      signupModalVisible,
+      signupSuccess,
+      autoValue,
+      autoSource
+    } = this.state;
 
     return (
       <>
@@ -114,6 +152,12 @@ class NavBar extends Component {
                     size="large"
                     style={{ width: '350px' }}
                     placeholder="Search"
+                    onSearch={this.handleSearch}
+                    value={autoValue}
+                    dataSource={autoSource}
+                    onChange={this.handleSearchTextChange}
+                    onSelect={this.handleSelectItem}
+                    placeholder="Hostel Name / City"
                   >
                     <Input suffix={<Icon type="search" />} />
                   </AutoComplete>
