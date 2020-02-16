@@ -11,21 +11,23 @@ services:
     command: mongoimport --host mongo --db hostels --collection hostels /data/hostels.json
 
   backend:
-    build: ./backend
+    build: 
+      context: ./backend
+      args:
+        - SECRET_KEY=
+        - MONGO_URL=mongodb://mongo/hostels
+        - PORT=3030
     ports:
       - "3030:3030"
-    environment: 
-      - SECRET_KEY=
-      - MONGO_URL=mongodb://mongo/hostels
-      - PORT=3030
     links:
       - mongo
 
   frontend: 
-    build: ./frontend
+    build: 
+      context: ./frontend
+      args:
+        - REACT_APP_API_ENDPOINT=http://localhost:3030/api
+        - REACT_APP_GOOGLE_MAP_KEY=
     ports:
       - "3000:80"
-    environment: 
-      - REACT_APP_API_ENDPOINT=http://localhost:3030/api
-      - REACT_APP_GOOGLE_MAP_KEY=
       
