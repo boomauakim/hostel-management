@@ -67,6 +67,10 @@ const FilterContainer = styled.div`
   border-bottom: 1px solid #ebebeb;
   padding-left: 80px;
   background-color: white;
+
+  @media (max-width: 768px) {
+    padding-left: 0px;
+  }
 `;
 
 const FilterItemContainer = styled.div`
@@ -249,7 +253,7 @@ class Home extends Component {
           <HomeContainer>
             <Row gutter={[16, 16]}>
               {hostelList.map(hostel => (
-                <Col span={6} key={hostel.id}>
+                <Col md={12} lg={8} xl={6} key={hostel.id}>
                   <HostelContainer
                     onClick={() => {
                       this.handleHostelDetail(hostel.id);

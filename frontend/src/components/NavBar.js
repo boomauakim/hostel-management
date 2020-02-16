@@ -151,7 +151,6 @@ class NavBar extends Component {
                     dropdownMatchSelectWidth={false}
                     size="large"
                     style={{ width: '350px' }}
-                    placeholder="Search"
                     onSearch={this.handleSearch}
                     value={autoValue}
                     dataSource={autoSource}

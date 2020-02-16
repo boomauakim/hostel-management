@@ -148,7 +148,7 @@ class MyBooking extends Component {
           {bookings.length > 0 ? (
             <Row gutter={[16, 32]}>
               {bookings.map(booking => (
-                <Col span={12} key={booking.id}>
+                <Col lg={12} key={booking.id}>
                   <Row>
                     <Col span={8}>
                       <HostelImage src={booking.hostel.images[0]} />
