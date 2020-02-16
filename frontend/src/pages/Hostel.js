@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies, react/forbid-prop-types, react/no-array-index-key */
+/* eslint-disable import/no-extraneous-dependencies, no-restricted-syntax, react/forbid-prop-types, react/no-array-index-key */
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
@@ -13,6 +13,7 @@ import {
   Row
 } from 'antd';
 import GoogleMapReact from 'google-map-react';
+import moment from 'moment';
 
 import ElevatorIcon from '../assets/icons/sort-circle-light.svg';
 import KitchenIcon from '../assets/icons/hat-chef-light.svg';
@@ -25,7 +26,7 @@ import TvIcon from '../assets/icons/tv-light.svg';
 import WifiIcon from '../assets/icons/wifi-light.svg';
 import { ClientContext } from '../contexts/ClientContext';
 import Container from '../components/Container';
-import { booking } from '../services/booking';
+import { booking, bookingCalendar } from '../services/booking';
 import { getHostelData } from '../services/hostels';
 
 const { RangePicker } = DatePicker;
@@ -157,6 +158,7 @@ const AlertContainer = styled.div`
 class Hostel extends Component {
   state = {
     hostel: {},
+    bookingCalendarList: {},
     checkin: '',
     checkout: '',
     guests: 1,
@@ -177,6 +179,23 @@ class Hostel extends Component {
       .catch(() => {
         this.setState({ hostel: {} });
       });
+
+    const payload = {
+      hostelId,
+      startAt: moment().format('YYYY-MM-DD'),
+      endAt: moment()
+        .add(12, 'month')
+        .format('YYYY-MM-DD')
+    };
+    await bookingCalendar(payload).then(({ data }) => {
+      const bookingCalendarList = {};
+
+      for (const date of data.calendar) {
+        bookingCalendarList[date.date] = date.available;
+      }
+
+      this.setState({ bookingCalendarList });
+    });
   };
 
   handleNext = () => {
@@ -222,6 +241,17 @@ class Hostel extends Component {
         .then(() => this.setState({ success: true, error: '' }))
         .catch(() => this.setState({ success: false, error: 'ERROR' }));
     }
+  };
+
+  disabledDate = current => {
+    const { bookingCalendarList } = this.state;
+
+    const bookingStatus =
+      bookingCalendarList[moment(current).format('YYYY-MM-DD')] !== undefined
+        ? bookingCalendarList[moment(current).format('YYYY-MM-DD')]
+        : true;
+
+    return current < moment().endOf('day') || !bookingStatus;
   };
 
   render() {
@@ -410,6 +440,7 @@ class Hostel extends Component {
                     allowClear={false}
                     placeholder={['Checkin', 'Checkout']}
                     onChange={range => this.handleRangeDate(range)}
+                    disabledDate={this.disabledDate}
                   />
                 </InputContainer>
                 <InputContainer>
