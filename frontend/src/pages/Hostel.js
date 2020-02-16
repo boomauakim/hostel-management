@@ -218,7 +218,7 @@ class Hostel extends Component {
         guests
       };
 
-      await booking(payload)
+      await booking(client.token, payload)
         .then(() => this.setState({ success: true, error: '' }))
         .catch(() => this.setState({ success: false, error: 'ERROR' }));
     }

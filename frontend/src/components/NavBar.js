@@ -87,6 +87,11 @@ class NavBar extends Component {
     history.push('/');
   };
 
+  handleMyBooking = () => {
+    const { history } = this.props;
+    history.push('/me/bookings');
+  };
+
   render() {
     const client = this.context;
     const { loginModalVisible, signupModalVisible, signupSuccess } = this.state;
@@ -118,7 +123,9 @@ class NavBar extends Component {
                 <MenuContainer>
                   {client.token && (
                     <>
-                      <TextLink>My Booking</TextLink>
+                      <TextLink onClick={() => this.handleMyBooking()}>
+                        My Booking
+                      </TextLink>
                       <TextLink onClick={() => this.handleLogout()}>
                         Log out
                       </TextLink>

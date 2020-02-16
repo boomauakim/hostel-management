@@ -112,6 +112,7 @@ class SignupModal extends Component {
               await signup(payload)
                 .then(() => {
                   resetForm(initialValues);
+                  this.setState({ error: undefined });
                   handleChangeModal('login', { signupSuccess: true });
                 })
                 .catch(err => {

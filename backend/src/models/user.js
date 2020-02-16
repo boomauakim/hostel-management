@@ -38,7 +38,7 @@ UserSchema.pre('save', function(next) {
   const user = this;
 
   UserModel.findOne({})
-    .sort({ user: -1 })
+    .sort({ id: -1 })
     .exec(async (err, data) => {
       const hash = await bcrypt.hash(user.password, 10);
       if (!data || !data.id) {
