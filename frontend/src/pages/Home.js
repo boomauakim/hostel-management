@@ -259,7 +259,7 @@ class Home extends Component {
                     <CityText>{hostel.city}</CityText>
                     <HostelText>{hostel.name}</HostelText>
                     <HostelPriceText>
-                      <b>{Number(hostel.price).toLocaleString()}</b>
+                      <b>{`฿${Number(hostel.price).toLocaleString()}`}</b>
                       &nbsp;/ night
                     </HostelPriceText>
                   </HostelContainer>

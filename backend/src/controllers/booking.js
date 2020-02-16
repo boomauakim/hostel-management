@@ -23,7 +23,8 @@ const createBooking = async (req, res) => {
       check_out: Joi.date()
         .format('YYYY-MM-DD')
         .utc()
-        .required()
+        .required(),
+      guests: Joi.number().required()
     });
     const payload = await schema.validateAsync(req.body);
 
@@ -71,6 +72,7 @@ const createBooking = async (req, res) => {
         date: moment().format('YYYY-MM-DD'),
         checkIn: moment(checkIn).format('YYYY-MM-DD'),
         checkOut: moment(checkOut).format('YYYY-MM-DD'),
+        guests: payload.guests,
         status: 'confirm'
       };
       const booking = new BookingModel(bookingData);

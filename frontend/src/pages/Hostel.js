@@ -1,18 +1,32 @@
+/* eslint-disable import/no-extraneous-dependencies, react/forbid-prop-types, react/no-array-index-key */
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Carousel, Col, DatePicker, InputNumber, Row } from 'antd';
+import {
+  Alert,
+  Button,
+  Carousel,
+  Col,
+  DatePicker,
+  InputNumber,
+  Row
+} from 'antd';
 import GoogleMapReact from 'google-map-react';
 
 import ElevatorIcon from '../assets/icons/sort-circle-light.svg';
 import KitchenIcon from '../assets/icons/hat-chef-light.svg';
+import MapMarker from '../assets/icons/map-marker-alt-solid.svg';
 import NextIcon from '../assets/icons/chevron-right-regular.svg';
 import ParkingIcon from '../assets/icons/parking-circle-light.svg';
 import PoolIcon from '../assets/icons/swimming-pool-light.svg';
 import PreviousIcon from '../assets/icons/chevron-left-regular.svg';
 import TvIcon from '../assets/icons/tv-light.svg';
 import WifiIcon from '../assets/icons/wifi-light.svg';
-import SampleImage from '../assets/images/sample-image.webp';
+import { ClientContext } from '../contexts/ClientContext';
 import Container from '../components/Container';
+import { booking } from '../services/booking';
+import { getHostelData } from '../services/hostels';
 
 const { RangePicker } = DatePicker;
 
@@ -23,7 +37,7 @@ const HostelContainer = styled.div`
 const HostelImage = styled.div`
   width: 100%;
   height: 500px;
-  background-image: url(${SampleImage});
+  background-image: url(${({ src }) => src});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
@@ -101,7 +115,7 @@ const AmenitiesText = styled.span`
 `;
 
 const GoogleMapContainer = styled.div`
-  height: 300px;
+  height: 400px;
 `;
 
 const BookingContainer = styled.div`
@@ -136,7 +150,35 @@ const Label = styled.div`
   margin-bottom: 3px;
 `;
 
+const AlertContainer = styled.div`
+  margin-bottom: 20px;
+`;
+
 class Hostel extends Component {
+  state = {
+    hostel: {},
+    checkin: '',
+    checkout: '',
+    guests: 1,
+    error: '',
+    success: false
+  };
+
+  constructor(props) {
+    super(props);
+    this.getHostelDetail();
+  }
+
+  getHostelDetail = async () => {
+    const { match } = this.props;
+    const hostelId = match.params.id;
+    await getHostelData(hostelId)
+      .then(({ data }) => this.setState({ hostel: data.hostels }))
+      .catch(() => {
+        this.setState({ hostel: {} });
+      });
+  };
+
   handleNext = () => {
     this.carousel.next();
   };
@@ -145,7 +187,46 @@ class Hostel extends Component {
     this.carousel.prev();
   };
 
+  handleRangeDate = range => {
+    this.setState({
+      checkin: range[0].format('YYYY-MM-DD'),
+      checkout: range[1].format('YYYY-MM-DD')
+    });
+  };
+
+  handleBooking = async () => {
+    const client = this.context;
+    const { checkin, checkout, guests } = this.state;
+    const { match } = this.props;
+    const hostelId = match.params.id;
+    let canBooking = true;
+
+    if (!checkin && !checkout) {
+      canBooking = false;
+      await this.setState({ error: 'NOT_HAVE_DATE' });
+    }
+    if (!client.token) {
+      canBooking = false;
+      await this.setState({ error: 'NOT_LOGIN' });
+    }
+
+    if (canBooking) {
+      const payload = {
+        hostel_id: hostelId,
+        check_in: checkin,
+        check_out: checkout,
+        guests
+      };
+
+      await booking(payload)
+        .then(() => this.setState({ success: true, error: '' }))
+        .catch(() => this.setState({ success: false, error: 'ERROR' }));
+    }
+  };
+
   render() {
+    const { hostel, guests, error, success } = this.state;
+
     return (
       <Container>
         <HostelContainer>
@@ -166,108 +247,158 @@ class Hostel extends Component {
                   this.carousel = c;
                 }}
               >
-                <HostelImage />
-                <HostelImage />
+                {hostel.images &&
+                  hostel.images.map((image, index) => (
+                    <HostelImage src={image} key={`img-${index}`} />
+                  ))}
               </Carousel>
-              <HostelNameText>180° VIEW, PRIVATE POOL VILLA..</HostelNameText>
-              <div>Thailand</div>
+              <HostelNameText>{hostel.name ?? ''}</HostelNameText>
+              <div>{hostel.location?.city ?? ''}</div>
               <Hr margin={25} />
-              <HostelDesc>
-                Brand new luxury villa in North Bali with stunning uninterrupted
-                sea views. Completed in 2015,
-                <br />
-                <br />
-                We have 3 almost identical listings, so please check out the
-                other 2 in case this one is booked.
-                <br />
-                <br />
-                https://www.airbnb.com/manage-listing/5155854 and
-                https://www.airbnb.com/manage-listing/1873760
-                <br />
-                <br />
-                Villa Sanglung, which is surrounded by nature with stunning,
-                uninterrupted ocean views is the perfect place to relax and
-                enjoy cooling breezes from its elevated position. This is Bali
-                from 25 years ago.
-                <br />
-                <br />
-                The villa has 2 large bedrooms both with en-suite bathrooms and
-                the master en-suite includes a bathtub.
-                <br />
-                <br />
-                An open concept living area including kitchen and third fully
-                equipped bathroom, leads out to an open air living / dining area
-                and terrace.
-                <br />
-                <br />
-                Upstairs there is a lovely open plan very versatile living space
-                with timber floors, and more incredible views.
-                <br />
-                <br />
-                An infinity pool completes the outdoor space where you can relax
-                whilst enjoying the full view toward Singaraja the sea and
-                beyond.
-                <br />
-                <br />
-                The villa sleeps up to 8 guests and provides staff and night
-                security.
-                <br />
-                <br />
-                The villa has been designed for those who want to relax and
-                enjoy the peace and quite of Bali from 25 years ago with the
-                convenience of being located not far from the beach and
-                Singaraja.
-              </HostelDesc>
+              <HostelDesc dangerouslySetInnerHTML={{ __html: hostel.about }} />
               <Hr margin={25} />
               <SectionText>Amenities</SectionText>
               <Row type="flex" align="middle">
                 <Col span={12}>
                   <AmenitiesItem>
                     <AmenitiesIcon src={WifiIcon} alt="wifi-icon" />
-                    <AmenitiesText>Wifi</AmenitiesText>
+                    {hostel.amenities?.wifi ? (
+                      <AmenitiesText>Wifi</AmenitiesText>
+                    ) : (
+                      <AmenitiesText>
+                        <strike>Wifi</strike>
+                      </AmenitiesText>
+                    )}
                   </AmenitiesItem>
                 </Col>
                 <Col span={12}>
                   <AmenitiesItem>
                     <AmenitiesIcon src={TvIcon} alt="tv-icon" />
-                    <AmenitiesText>TV</AmenitiesText>
+                    {hostel.amenities?.tv ? (
+                      <AmenitiesText>TV</AmenitiesText>
+                    ) : (
+                      <AmenitiesText>
+                        <strike>TV</strike>
+                      </AmenitiesText>
+                    )}
                   </AmenitiesItem>
                 </Col>
                 <Col span={12}>
                   <AmenitiesItem>
                     <AmenitiesIcon src={PoolIcon} alt="tv-icon" />
-                    <AmenitiesText>Pool</AmenitiesText>
+                    {hostel.amenities?.pool ? (
+                      <AmenitiesText>Pool</AmenitiesText>
+                    ) : (
+                      <AmenitiesText>
+                        <strike>Pool</strike>
+                      </AmenitiesText>
+                    )}
                   </AmenitiesItem>
                 </Col>
                 <Col span={12}>
                   <AmenitiesItem>
                     <AmenitiesIcon src={KitchenIcon} alt="tv-icon" />
-                    <AmenitiesText>Kitchen</AmenitiesText>
+                    {hostel.amenities?.kitchen ? (
+                      <AmenitiesText>Kitchen</AmenitiesText>
+                    ) : (
+                      <AmenitiesText>
+                        <strike>Kitchen</strike>
+                      </AmenitiesText>
+                    )}
                   </AmenitiesItem>
                 </Col>
                 <Col span={12}>
                   <AmenitiesItem>
                     <AmenitiesIcon src={ElevatorIcon} alt="tv-icon" />
-                    <AmenitiesText>Elevator</AmenitiesText>
+                    {hostel.amenities?.elevator ? (
+                      <AmenitiesText>Elevator</AmenitiesText>
+                    ) : (
+                      <AmenitiesText>
+                        <strike>Elevator</strike>
+                      </AmenitiesText>
+                    )}
                   </AmenitiesItem>
                 </Col>
                 <Col span={12}>
                   <AmenitiesItem>
                     <AmenitiesIcon src={ParkingIcon} alt="tv-icon" />
-                    <AmenitiesText>Parking</AmenitiesText>
+                    {hostel.amenities?.parking ? (
+                      <AmenitiesText>Parking</AmenitiesText>
+                    ) : (
+                      <AmenitiesText>
+                        <strike>Parking</strike>
+                      </AmenitiesText>
+                    )}
                   </AmenitiesItem>
                 </Col>
               </Row>
               <Hr margin={25} />
               <SectionText>Location</SectionText>
               <GoogleMapContainer>
-                <GoogleMapReact />
+                {hostel.location && (
+                  <GoogleMapReact
+                    bootstrapURLKeys={{
+                      key: process.env.REACT_APP_GOOGLE_MAP_KEY
+                    }}
+                    defaultCenter={[
+                      hostel.location.gmap.lat,
+                      hostel.location.gmap.lng
+                    ]}
+                    defaultZoom={11}
+                  >
+                    <img
+                      src={MapMarker}
+                      width="25px"
+                      lat={hostel.location.gmap.lat}
+                      lng={hostel.location.gmap.lng}
+                      alt="map-marker-icon"
+                    />
+                  </GoogleMapReact>
+                )}
               </GoogleMapContainer>
             </Col>
             <Col span={10}>
               <BookingContainer>
+                {error === 'NOT_LOGIN' && (
+                  <AlertContainer>
+                    <Alert
+                      message="Please login and continue."
+                      type="error"
+                      showIcon
+                    />
+                  </AlertContainer>
+                )}
+                {error === 'NOT_HAVE_DATE' && (
+                  <AlertContainer>
+                    <Alert
+                      message="Please select checkin and checkout."
+                      type="error"
+                      showIcon
+                    />
+                  </AlertContainer>
+                )}
+                {error === 'ERROR' && (
+                  <AlertContainer>
+                    <Alert
+                      message="Something went wrong, Please try again later."
+                      type="error"
+                      showIcon
+                    />
+                  </AlertContainer>
+                )}
+                {success && (
+                  <AlertContainer>
+                    <Alert
+                      message="Success! Have a good trip :)"
+                      type="success"
+                      showIcon
+                    />
+                  </AlertContainer>
+                )}
                 <div>
-                  <PriceText>฿5,555</PriceText>
+                  <PriceText>
+                    {`฿${Number(hostel.price).toLocaleString()}`}
+                  </PriceText>
                   &nbsp;per&nbsp;night
                 </div>
                 <Hr margin={15} />
@@ -278,6 +409,7 @@ class Hostel extends Component {
                     suffixIcon={<></>}
                     allowClear={false}
                     placeholder={['Checkin', 'Checkout']}
+                    onChange={range => this.handleRangeDate(range)}
                   />
                 </InputContainer>
                 <InputContainer>
@@ -286,10 +418,16 @@ class Hostel extends Component {
                     size="large"
                     min={1}
                     max={12}
-                    placeholder="Guest"
+                    defaultValue={1}
+                    value={guests}
                   />
                 </InputContainer>
-                <Button block type="primary" size="large">
+                <Button
+                  block
+                  type="primary"
+                  size="large"
+                  onClick={this.handleBooking}
+                >
                   <b>Reserve</b>
                 </Button>
               </BookingContainer>
@@ -301,4 +439,9 @@ class Hostel extends Component {
   }
 }
 
-export default Hostel;
+Hostel.contextType = ClientContext;
+Hostel.propTypes = {
+  match: PropTypes.object.isRequired
+};
+
+export default withRouter(Hostel);

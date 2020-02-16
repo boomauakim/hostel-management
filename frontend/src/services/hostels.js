@@ -11,4 +11,11 @@ export const getAvailableHostel = (startDate, endDate) =>
     `/hostels/available?limit=8&start_at=${startDate}&end_at=${endDate}`
   );
 
-export default { getAllHostels, getAllHostelsByLink, getAvailableHostel };
+export const getHostelData = id => axios.get(`/hostels/${id}`);
+
+export default {
+  getAllHostels,
+  getAllHostelsByLink,
+  getAvailableHostel,
+  getHostelData
+};

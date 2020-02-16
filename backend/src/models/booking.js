@@ -11,6 +11,7 @@ const BookingSchema = new Schema({
   date: Date,
   checkIn: Date,
   checkOut: Date,
+  guests: Number,
   status: String,
   user: {
     type: Schema.Types.ObjectId,
