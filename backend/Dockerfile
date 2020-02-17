@@ -13,7 +13,7 @@ ENV MONGO_URL $MONGO_URL
 ENV PORT $PORT
 ENV NPM_CONFIG_LOGLEVEL warn
 
-RUN npm install --production
+RUN yarn install --production
 
 EXPOSE 3030
 

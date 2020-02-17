@@ -10,6 +10,8 @@
 ```
 SECRET_KEY: # Random string or string
 
+REACT_APP_API_ENDPOINT: # API endpoint if you run on the server you must change it to URL or IP of the server
+
 REACT_APP_GOOGLE_MAP_KEY: # Google Maps JavaScript API token key
 ```
 > **Note**: You can change default value of env. variable if you want.
@@ -20,7 +22,7 @@ $ docker-compose up -d --build
 ```
 3. Complete !
 ```
-http://localhost:3000 # for frontend
+http://localhost # for frontend
 
-http://localhost:3030/api # for backend
+http://localhost/api # for backend
 ```
