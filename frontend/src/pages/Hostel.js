@@ -253,10 +253,14 @@ class Hostel extends Component {
     }
   };
 
+  handleGuests = guests => {
+    this.setState({guests: guests})
+  }
+
   disabledDate = current => {
     const { bookingCalendarList } = this.state;
 
-    const bookingStatus =
+    const bookingStatus = 
       bookingCalendarList[moment(current).format('YYYY-MM-DD')] !== undefined
         ? bookingCalendarList[moment(current).format('YYYY-MM-DD')]
         : true;
@@ -461,6 +465,7 @@ class Hostel extends Component {
                     max={12}
                     defaultValue={1}
                     value={guests}
+                    onChange={guests => this.handleGuests(guests)}
                   />
                 </InputContainer>
                 <Button
