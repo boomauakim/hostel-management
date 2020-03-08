@@ -1,4 +1,5 @@
 # Hotel Management
+Inspired by Airbnb and the images used in this project are taken from Airbnb.
 
 ### Tech Stack
 - React.js
